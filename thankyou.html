@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="hi" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Thank You</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&amp;family=Montserrat:wght@300;400;500;600&amp;display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .thank-bg {
+            background: linear-gradient(180deg, #f8f6f1 0%, #ede6dd 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative circles */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(120, 81, 169, 0.1);
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -50px;
+            left: -50px;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            left: 10%;
+        }
+
+        /* Animated lines */
+        .line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(120, 81, 169, 0.2), transparent);
+            opacity: 0;
+        }
+
+        .line-1 {
+            width: 200px;
+            height: 1px;
+            top: 30%;
+            left: 5%;
+            animation: slide-in 2s ease-out forwards;
+        }
+
+        .line-2 {
+            width: 150px;
+            height: 1px;
+            bottom: 35%;
+            right: 10%;
+            animation: slide-in 2.5s ease-out forwards;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes slide-in {
+            to {
+                opacity: 1;
+                transform: translateX(200px);
+            }
+        }
+
+        /* Content container */
+        .thank-container {
+            animation: fade-up 1.2s ease-out forwards;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        @keyframes fade-up {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Title */
+        .thank-title {
+            font-family: 'Merriweather', serif;
+            font-size: 4rem;
+            font-weight: 300;
+            color: #3d2817;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            animation: title-reveal 1.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes title-reveal {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Subtitle */
+        .thank-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            color: #8b7355;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            animation: subtitle-reveal 1.5s ease-out 0.2s forwards;
+            opacity: 0;
+            font-weight: 500;
+        }
+
+        @keyframes subtitle-reveal {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Divider line */
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #78a2a2, transparent);
+            margin: 0 auto 30px;
+            animation: divider-expand 1.2s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        @keyframes divider-expand {
+            to {
+                opacity: 1;
+                width: 80px;
+            }
+        }
+
+        /* Message */
+        .thank-message {
+            font-family: 'Merriweather', serif;
+            font-size: 1.1rem;
+            color: #5a5a5a;
+            line-height: 1.9;
+            max-width: 500px;
+            text-align: center;
+            margin-bottom: 50px;
+            animation: message-reveal 1.5s ease-out 0.6s forwards;
+            opacity: 0;
+            font-weight: 300;
+        }
+
+        @keyframes message-reveal {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Button */
+        .continue-btn {
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+            display: none;
+            background: #78a2a2;
+            color: white;
+            padding: 14px 50px;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            margin-top: 24px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 500;
+            transition: all 0.4s ease;
+            animation: btn-reveal 1.5s ease-out 0.8s forwards;
+            opacity: 0;
+            box-shadow: 0 8px 25px rgba(120, 162, 162, 0.2);
+        }
+
+        .continue-btn.visible {
+            display: inline-block;
+        }
+
+        @keyframes btn-reveal {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .continue-btn:hover {
+            background: #6b8e8e;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(120, 162, 162, 0.3);
+        }
+
+        .continue-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Floating accent */
+        .accent {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(120, 162, 162, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float-accent 6s ease-in-out infinite;
+        }
+
+        .accent-1 {
+            top: 15%;
+            left: 8%;
+            animation-delay: 0s;
+        }
+
+        .accent-2 {
+            bottom: 20%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        @keyframes float-accent {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-30px);
+            }
+        }
+    </style>
+    <style>
+        @view-transition {
+            navigation: auto;
+        }
+    </style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+</head>
+
+<body class="h-full">
+    <div class="thank-bg w-full h-full flex flex-col items-center justify-center p-8 relative overflow-hidden">
+        <!-- Decorative elements -->
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        <div class="line line-1"></div>
+        <div class="line line-2"></div>
+        <div class="accent accent-1"></div>
+        <div class="accent accent-2"></div><!-- Main content -->
+        <div class="thank-container text-center relative z-10"><!-- Divider -->
+            <div class="divider"></div><!-- Title -->
+            <h1 id="thank-title" class="thank-title">is bar k liye itna .  i think atai ses bar 😭 </h1><!-- Subtitle -->
+             <p id="thank-subtitle" class="thank-subtitle">happy birthday Sumana</p><!-- Message -->
+            <p id="thank-subtitle" class="thank-subtitle">thank you </p><!-- Message -->
+            <button id="continue-btn" class="continue-btn" type="button">Please Click ----</button>
+        </div>
+    </div>
+    <script>
+        const defaultConfig = {
+            thank_you_title: "धन्यवाद",
+            thank_you_subtitle: "आपका कदर है",
+            thank_you_message: "आपकी मेहनत और समर्दन हमें गर्व महसूस कराती है। हर कदम, हर चुनौती, हर सफलता — सब कुछ आपके कारण संभव है। आपको अनंत कामना के साथ।",
+            button_text: "आगे बढ़ें"
+        };
+
+        async function onConfigChange(config) {
+            const titleEl = document.getElementById('thank-title');
+            const subtitleEl = document.getElementById('thank-subtitle');
+            const messageEl = document.getElementById('thank-message');
+            const btnEl = document.getElementById('continue-btn');
+
+            if (titleEl) {
+                titleEl.textContent = config.thank_you_title || defaultConfig.thank_you_title;
+            }
+            if (subtitleEl) {
+                subtitleEl.textContent = config.thank_you_subtitle || defaultConfig.thank_you_subtitle;
+            }
+            if (messageEl) {
+                messageEl.textContent = config.thank_you_message || defaultConfig.thank_you_message;
+            }
+            if (btnEl) {
+                btnEl.textContent = config.button_text || defaultConfig.button_text;
+            }
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["thank_you_title", config.thank_you_title || defaultConfig.thank_you_title],
+                ["thank_you_subtitle", config.thank_you_subtitle || defaultConfig.thank_you_subtitle],
+                ["thank_you_message", config.thank_you_message || defaultConfig.thank_you_message],
+                ["button_text", config.button_text || defaultConfig.button_text]
+            ]);
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        }
+
+        const continueBtn = document.getElementById('continue-btn');
+        setTimeout(() => {
+            continueBtn.classList.add('visible');
+        }, 10000);
+
+        continueBtn.addEventListener('click', function () {
+            window.location.href = 'special.html';
+        });
+    </script>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9c9bc3d4e3654f8f',t:'MTc3MDM5MjYyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>

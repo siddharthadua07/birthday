@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="hi" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Image Slider</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        .slider-bg {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Animated background elements */
+        .bg-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+        }
+
+        .sphere-1 {
+            width: 350px;
+            height: 350px;
+            top: -50px;
+            left: -50px;
+            background: #ff006e;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .sphere-2 {
+            width: 300px;
+            height: 300px;
+            bottom: -50px;
+            right: -50px;
+            background: #00f5ff;
+            animation: float 8s ease-in-out infinite 2s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(40px);
+            }
+        }
+
+        /* Header */
+        .slider-header {
+            text-align: center;
+            margin-bottom: 30px;
+            z-index: 10;
+            animation: header-fade 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes header-fade {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .slider-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00f5ff 0%, #ff006e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .slider-subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            color: #a0aec0;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main slider container */
+        .slider-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            z-index: 20;
+        }
+
+        /* Slider container */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            background: rgba(20, 20, 40, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 245, 255, 0.3);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 245, 255, 0.2), inset 0 0 30px rgba(0, 245, 255, 0.1);
+        }
+
+        /* Slide track */
+        .slides-track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Individual slide */
+        .slide {
+            width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: image-reveal 0.8s ease-out forwards;
+        }
+
+        @keyframes image-reveal {
+            from {
+                opacity: 0;
+                transform: scale(1.1);
+                filter: blur(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+                filter: blur(0);
+            }
+        }
+
+        /* Overlay gradient */
+        .slide::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.1) 0%, rgba(255, 0, 110, 0.1) 100%);
+            pointer-events: none;
+        }
+
+        /* Navigation dots */
+        .dots-container {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 25px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 245, 255, 0.2);
+        }
+
+        .dot.active {
+            background: linear-gradient(135deg, #00f5ff, #ff006e);
+            width: 24px;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.6);
+            border: 1px solid rgba(0, 245, 255, 0.8);
+        }
+
+        .dot:hover {
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(1.2);
+        }
+
+        /* Counter */
+        .image-counter {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            color: #a0aec0;
+            text-align: center;
+            margin-top: 15px;
+            letter-spacing: 1px;
+            font-weight: 500;
+            z-index: 10;
+        }
+
+        .counter-number {
+            background: linear-gradient(135deg, #00f5ff, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        /* Arrow buttons */
+        .arrow-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 245, 255, 0.2);
+            border: 1px solid rgba(0, 245, 255, 0.5);
+            border-radius: 50%;
+            color: #00f5ff;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .arrow-btn:hover {
+            background: rgba(0, 245, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.6);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .arrow-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .arrow-prev {
+            left: -50px;
+        }
+
+        .arrow-next {
+            right: -50px;
+        }
+
+        /* Loading skeleton */
+        .skeleton {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(0, 245, 255, 0.1) 25%, rgba(255, 0, 110, 0.1) 50%, rgba(0, 245, 255, 0.1) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-load 1.5s infinite;
+        }
+
+        @keyframes skeleton-load {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .slider-title {
+                font-size: 1.5rem;
+            }
+
+            .slider-wrapper {
+                max-width: 96vw;
+            }
+
+            .arrow-prev {
+                left: -30px;
+            }
+
+            .arrow-next {
+                right: -30px;
+            }
+
+            .arrow-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+        }
+
+        /* Touch feedback */
+        .slider-container.dragging {
+            cursor: grabbing;
+        }
+    </style>
+</head>
+
+<body class="h-full w-full">
+    <div class="slider-bg">
+
+        <!-- Background elements -->
+        <div class="bg-sphere sphere-1"></div>
+        <div class="bg-sphere sphere-2"></div>
+
+        <!-- Header -->
+        <div class="slider-header">
+            <h1 id="slider-title" class="slider-title">Your Collection</h1>
+            <p id="slider-subtitle" class="slider-subtitle">Swipe to explore</p>
+        </div>
+
+        <!-- Slider wrapper -->
+        <div class="slider-wrapper">
+
+            <!-- Slider container -->
+            <div class="slider-container" id="slider-container">
+
+                <!-- Slides track -->
+                <div class="slides-track" id="slides-track">
+
+                    <!-- Slide 1 -->
+                    <div class="slide">
+                        <img src="i1.jpeg" alt="Image 1" loading="lazy"
+                            onerror="console.error('Image failed to load:', this.src); this.parentElement.style.background='linear-gradient(135deg, #667eea, #764ba2)'; this.style.display='none';">
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="slide">
+                        <img src="i2.jpeg" alt="Image 2" loading="lazy"
+                            onerror="console.error('Image failed to load:', this.src); this.parentElement.style.background='linear-gradient(135deg, #f093fb, #f5576c)'; this.style.display='none';">
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="slide">
+                        <img src="i3.jpeg" alt="Image 3" loading="lazy"
+                            onerror="console.error('Image failed to load:', this.src); this.parentElement.style.background='linear-gradient(135deg, #4facfe, #00f2fe)'; this.style.display='none';">
+                    </div>
+
+                    <!-- Slide 4 -->
+                    <div class="slide">
+                        <img src="i4.jpeg" alt="Image 4" loading="lazy"
+                            onerror="console.error('Image failed to load:', this.src); this.parentElement.style.background='linear-gradient(135deg, #fa709a, #fee140)'; this.style.display='none';">
+                    </div>
+
+                    <!-- Slide 5 -->
+                    <div class="slide">
+                        <img src="i5.jpeg" alt="Image 5" loading="lazy"
+                            onerror="console.error('Image failed to load:', this.src); this.parentElement.style.background='linear-gradient(135deg, #a8edea, #fed6e3)'; this.style.display='none';">
+                    </div>
+
+                    <!-- Slide 6 -->
+                    <div class="slide">
+                        <img src="i6.jpeg" alt="Image 6" loading="lazy"
+                            onerror="console.error('Image failed to load:', this.src); this.parentElement.style.background='linear-gradient(135deg, #fbc2eb, #a6c0fe)'; this.style.display='none';">
+                    </div>
+
+                    <!-- Slide 7 -->
+                    <div class="slide">
+                        <img src="i7.jpeg" alt="Image 7" loading="lazy"
+                            onerror="console.error('Image failed to load:', this.src); this.parentElement.style.background='linear-gradient(135deg, #8ec5fc, #e0c3fc)'; this.style.display='none';">
+                    </div>
+
+                    <!-- Slide 8 -->
+                    <div class="slide">
+                        <img src="i8.jpeg" alt="Image 8" loading="lazy"
+                            onerror="console.error('Image failed to load:', this.src); this.parentElement.style.background='linear-gradient(135deg, #f5f7fa, #c3cfe2)'; this.style.display='none';">
+                    </div>
+
+                    <!-- Slide 9 -->
+                    <div class="slide">
+                        <img src="i9.jpeg" alt="Image 9" loading="lazy"
+                            onerror="console.error('Image failed to load:', this.src); this.parentElement.style.background='linear-gradient(135deg, #fa709a, #fee140)'; this.style.display='none';">
+                    </div>
+
+                    <!-- Slide 10 -->
+                    <div class="slide">
+                        <img src="i10.jpeg" alt="Image 10" loading="lazy"
+                            onerror="console.error('Image failed to load:', this.src); this.parentElement.style.background='linear-gradient(135deg, #a8edea, #fed6e3)'; this.style.display='none';">
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Arrow buttons -->
+            <button class="arrow-btn arrow-prev" id="prev-btn">‹</button>
+            <button class="arrow-btn arrow-next" id="next-btn">›</button>
+
+        </div>
+
+        <!-- Dots -->
+        <div class="dots-container" id="dots-container"></div>
+
+        <!-- Counter -->
+        <div class="image-counter">
+            <span class="counter-number" id="current-slide">1</span> / 10
+        </div>
+        <!-- Bottom Thank You Button -->
+        <div class="mt-8 z-10">
+            <button id="thankyou-btn"
+                class="px-10 py-4 rounded-full font-bold tracking-wider text-lg transition-all duration-300" style="
+            background: linear-gradient(135deg, #00f5ff, #ff006e);
+            color: #0f0c29;
+            box-shadow: 0 10px 40px rgba(0,245,255,0.4);
+        ">
+                → → → →
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const defaultConfig = {
+            slider_title: "My Collection",
+            slider_subtitle: "Swipe to explore"
+        };
+
+        let currentSlide = 0;
+        const totalSlides = 10;
+        let isDragging = false;
+        let startX = 0;
+        let currentX = 0;
+        let dragOffset = 0;
+
+        const track = document.getElementById('slides-track');
+        const container = document.getElementById('slider-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const dotsContainer = document.getElementById('dots-container');
+        const currentSlideSpan = document.getElementById('current-slide');
+
+        // Create dots
+        function createDots() {
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (i === 0 ? ' active' : '');
+                dot.addEventListener('click', () => goToSlide(i));
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        // Update slide position
+        function updateSlide() {
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            currentSlideSpan.textContent = currentSlide + 1;
+
+            // Update dots
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        // Go to specific slide
+        function goToSlide(n) {
+            currentSlide = n;
+            updateSlide();
+        }
+
+        // Next slide
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlide();
+        }
+
+        // Previous slide
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSlide();
+        }
+
+        // Mouse/touch events
+        container.addEventListener('mousedown', startDrag);
+        container.addEventListener('touchstart', startDrag);
+        document.addEventListener('mousemove', moveDrag);
+        document.addEventListener('touchmove', moveDrag);
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        function startDrag(e) {
+            isDragging = true;
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            dragOffset = 0;
+            container.classList.add('dragging');
+        }
+
+        function moveDrag(e) {
+            if (!isDragging) return;
+            currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            dragOffset = currentX - startX;
+        }
+
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            container.classList.remove('dragging');
+
+            // Swipe threshold
+            if (Math.abs(dragOffset) > 50) {
+                if (dragOffset > 0) {
+                    prevSlide();
+                } else {
+                    nextSlide();
+                }
+            }
+        }
+
+        // Button events
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+
+        // Element SDK integration
+        async function onConfigChange(config) {
+            const titleEl = document.getElementById('slider-title');
+            const subtitleEl = document.getElementById('slider-subtitle');
+
+            if (titleEl) {
+                titleEl.textContent = config.slider_title || defaultConfig.slider_title;
+            }
+            if (subtitleEl) {
+                subtitleEl.textContent = config.slider_subtitle || defaultConfig.slider_subtitle;
+            }
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["slider_title", config.slider_title || defaultConfig.slider_title],
+                ["slider_subtitle", config.slider_subtitle || defaultConfig.slider_subtitle]
+            ]);
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        }
+
+        // Initialize
+        createDots();
+        // Thank you page redirect
+        document.getElementById('thankyou-btn').addEventListener('click', function () {
+            this.textContent = 'Redirecting...';
+            this.disabled = true;
+
+            setTimeout(() => {
+                window.location.href = 'thankyou.html';
+            }, 700);
+        });
+
+    </script>
+
+</body>
+
+
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aap k liye kuch laya hu</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 28px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            color: #fff4f8;
+            background:
+                radial-gradient(ellipse at 20% 15%, rgba(255, 119, 180, 0.2), transparent 42%),
+                radial-gradient(ellipse at 80% 85%, rgba(147, 112, 219, 0.24), transparent 44%),
+                linear-gradient(135deg, #160d25, #391b45 55%, #1a102e);
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            color: #ffe2f1;
+            font-size: clamp(1.8rem, 6vw, 3.2rem);
+            line-height: 1.25;
+            text-shadow: 0 4px 28px rgba(255, 128, 190, 0.35);
+        }
+
+        .portrait-frame {
+            width: min(76vw, 420px);
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            border: 2px solid rgba(255, 226, 242, 0.75);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+        }
+
+        .portrait-frame img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            animation: portrait-float 4s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        @keyframes portrait-float {
+            0%,
+            100% {
+                transform: scale(1) translateY(0);
+            }
+
+            50% {
+                transform: scale(1.035) translateY(-8px);
+            }
+        }
+
+        button {
+            padding: 13px 34px;
+            border: 1px solid rgba(255, 226, 242, 0.7);
+            border-radius: 999px;
+            color: #351629;
+            background: linear-gradient(135deg, #ffd4e6, #ff9bc8);
+            box-shadow: 0 10px 28px rgba(255, 125, 184, 0.28);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 34px rgba(255, 125, 184, 0.4);
+        }
+
+        button:focus-visible {
+            outline: 3px solid #fff;
+            outline-offset: 4px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .portrait-frame img {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Aap k liye kuch laya hu ....</h1>
+    <div class="portrait-frame">
+        <img src="aap.png" alt="A special picture for you">
+    </div>
+    <button id="see-btn" type="button">Dekhlo naaa</button>
+    <script>
+        document.getElementById("see-btn").addEventListener("click", function () {
+            window.location.href = "rose.html";
+        });
+    </script>
+</body>
+
+</html>

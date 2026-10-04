@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rose Gallery</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            color: #fff4f7;
+            background:
+                radial-gradient(ellipse at 18% 18%, rgba(255, 105, 150, 0.2), transparent 42%),
+                radial-gradient(ellipse at 82% 82%, rgba(177, 100, 175, 0.2), transparent 45%),
+                linear-gradient(135deg, #170d20, #421b34 55%, #1e102b);
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            color: #ffe1ec;
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            text-shadow: 0 4px 28px rgba(255, 128, 170, 0.35);
+        }
+
+        .carousel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(8px, 3vw, 22px);
+        }
+
+        .portrait-frame {
+            position: relative;
+            width: min(68vw, 380px);
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            border: 2px solid rgba(255, 225, 236, 0.75);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+        }
+
+        .portrait-frame img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .portrait-frame img.changing {
+            animation: reveal-image 0.4s ease both;
+        }
+
+        @keyframes reveal-image {
+            from {
+                opacity: 0.35;
+                transform: scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .image-error {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-content: center;
+            gap: 8px;
+            padding: 24px;
+            color: #ffe1ec;
+            background: rgba(30, 12, 28, 0.94);
+            font-size: 0.95rem;
+        }
+
+        .image-error[hidden] {
+            display: none;
+        }
+
+        .image-error strong {
+            overflow-wrap: anywhere;
+        }
+
+        .arrow-btn {
+            width: clamp(40px, 10vw, 52px);
+            height: clamp(40px, 10vw, 52px);
+            flex: 0 0 auto;
+            border: 1px solid rgba(255, 225, 236, 0.7);
+            border-radius: 50%;
+            color: #351629;
+            background: linear-gradient(135deg, #ffd4e3, #ff9bb9);
+            box-shadow: 0 10px 28px rgba(255, 125, 160, 0.25);
+            font-size: 1.7rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .arrow-btn:hover {
+            filter: brightness(1.08);
+        }
+
+        .arrow-btn:focus-visible {
+            outline: 3px solid #fff;
+            outline-offset: 4px;
+        }
+
+        #image-counter {
+            min-width: 64px;
+            color: #ffe1ec;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+        }
+
+        #arman-btn {
+            margin-top: 4px;
+            padding: 12px 30px;
+            border: 1px solid rgba(255, 225, 236, 0.7);
+            border-radius: 999px;
+            color: #351629;
+            background: linear-gradient(135deg, #ffd4e3, #ff9bb9);
+            box-shadow: 0 10px 28px rgba(255, 125, 160, 0.25);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            .portrait-frame {
+                width: min(65vw, 320px);
+            }
+
+            body {
+                gap: 16px;
+                padding: 24px 10px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .portrait-frame img.changing {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <audio autoplay loop preload="auto" aria-hidden="true">
+        <source src="f8.mp3" type="audio/mpeg">
+    </audio>
+    <h1>Rose Gallery</h1>
+    <div class="carousel" aria-label="Rose image gallery">
+        <button id="previous-btn" class="arrow-btn" type="button" aria-label="Previous image">‹</button>
+        <div class="portrait-frame">
+            <img id="gallery-image" src="r1.png" alt="Rose gallery image 1 of 5">
+            <div id="image-error" class="image-error" role="status" hidden>
+                <strong id="missing-image-name"></strong>
+                <span>Add this image to the same folder as rose.html.</span>
+            </div>
+        </div>
+        <button id="next-btn" class="arrow-btn" type="button" aria-label="Next image">›</button>
+    </div>
+    <div id="image-counter" aria-live="polite">1 / 5</div>
+    <button id="arman-btn" type="button">Next</button>
+    <script>
+        const totalImages = 5;
+        let currentImage = 1;
+        const galleryImage = document.getElementById("gallery-image");
+        const imageError = document.getElementById("image-error");
+        const missingImageName = document.getElementById("missing-image-name");
+        const imageCounter = document.getElementById("image-counter");
+
+        function showImage(imageNumber) {
+            currentImage = (imageNumber - 1 + totalImages) % totalImages + 1;
+            const imageName = `r${currentImage}.png`;
+
+            imageError.hidden = true;
+            galleryImage.hidden = false;
+            galleryImage.alt = `Rose gallery image ${currentImage} of ${totalImages}`;
+            imageCounter.textContent = `${currentImage} / ${totalImages}`;
+            galleryImage.classList.remove("changing");
+            void galleryImage.offsetWidth;
+            galleryImage.classList.add("changing");
+            galleryImage.src = imageName;
+        }
+
+        galleryImage.addEventListener("error", function () {
+            missingImageName.textContent = `${galleryImage.getAttribute("src")} was not found.`;
+            galleryImage.hidden = true;
+            imageError.hidden = false;
+        });
+
+        document.getElementById("previous-btn").addEventListener("click", function () {
+            showImage(currentImage - 1);
+        });
+
+        document.getElementById("next-btn").addEventListener("click", function () {
+            showImage(currentImage + 1);
+        });
+
+        document.getElementById("arman-btn").addEventListener("click", function () {
+            window.location.href = "arman.html";
+        });
+    </script>
+</body>
+
+</html>

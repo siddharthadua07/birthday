@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Neon Heart Animation</title>
+
+    <!-- Import map for three.js modules -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <link rel="stylesheet" href="s2.css" />
+    <style>
+      #next-btn {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        z-index: 1002;
+        padding: 12px 30px;
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(120, 70, 220, 0.85);
+        box-shadow: 0 0 24px rgba(150, 100, 255, 0.55);
+        font: 600 16px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        cursor: pointer;
+        transform: translateX(-50%);
+      }
+
+      #next-btn[hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container"></div>
+    <div class="glow"></div>
+    <button id="next-btn" type="button" hidden>Next</button>
+
+    <script type="module" src="script1.js"></script>
+    <script>
+      const nextButton = document.getElementById("next-btn");
+
+      window.setTimeout(function () {
+        nextButton.hidden = false;
+      }, 50000);
+
+      nextButton.addEventListener("click", function () {
+        window.location.href = "tree.html";
+      });
+    </script>
+  </body>
+</html>

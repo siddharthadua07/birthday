@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="bn" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Animated Poem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .poem-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 215, 0, 0.6);
+            border-radius: 50%;
+            animation: float-particle 8s infinite ease-in-out;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+
+        .particle:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            left: 20%;
+            animation-delay: 1s;
+        }
+
+        .particle:nth-child(3) {
+            left: 30%;
+            animation-delay: 2s;
+        }
+
+        .particle:nth-child(4) {
+            left: 50%;
+            animation-delay: 3s;
+        }
+
+        .particle:nth-child(5) {
+            left: 70%;
+            animation-delay: 4s;
+        }
+
+        .particle:nth-child(6) {
+            left: 80%;
+            animation-delay: 5s;
+        }
+
+        .particle:nth-child(7) {
+            left: 90%;
+            animation-delay: 6s;
+        }
+
+        .particle:nth-child(8) {
+            left: 40%;
+            animation-delay: 1.5s;
+        }
+
+        .particle:nth-child(9) {
+            left: 60%;
+            animation-delay: 2.5s;
+        }
+
+        .particle:nth-child(10) {
+            left: 85%;
+            animation-delay: 3.5s;
+        }
+
+        @keyframes float-particle {
+
+            0%,
+            100% {
+                transform: translateY(100%) scale(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-800px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Glowing moon */
+        .moon {
+            position: absolute;
+            top: 8%;
+            right: 10%;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #fffacd 0%, #f0e68c 50%, transparent 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(255, 250, 205, 0.8), 0 0 100px rgba(255, 250, 205, 0.4);
+            animation: moon-glow 4s infinite ease-in-out;
+        }
+
+        @keyframes moon-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 60px rgba(255, 250, 205, 0.8), 0 0 100px rgba(255, 250, 205, 0.4);
+                transform: scale(1);
+            }
+
+            50% {
+                box-shadow: 0 0 80px rgba(255, 250, 205, 1), 0 0 120px rgba(255, 250, 205, 0.6);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Stars */
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+
+        .star:nth-child(1) {
+            top: 15%;
+            left: 15%;
+            animation-delay: 0s;
+        }
+
+        .star:nth-child(2) {
+            top: 25%;
+            left: 40%;
+            animation-delay: 0.3s;
+        }
+
+        .star:nth-child(3) {
+            top: 10%;
+            left: 60%;
+            animation-delay: 0.6s;
+        }
+
+        .star:nth-child(4) {
+            top: 30%;
+            left: 25%;
+            animation-delay: 0.9s;
+        }
+
+        .star:nth-child(5) {
+            top: 20%;
+            left: 75%;
+            animation-delay: 1.2s;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.5);
+            }
+        }
+
+        /* Title animation */
+        .poem-title {
+            font-family: 'Playfair Display', serif;
+            animation: title-reveal 1.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+
+        @keyframes title-reveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Decorative line */
+        .deco-line {
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            animation: line-expand 1s ease-out 0.5s forwards;
+        }
+
+        @keyframes line-expand {
+            to {
+                width: 120px;
+            }
+        }
+
+        /* Poem lines animation */
+        .poem-line {
+            font-family: 'Cormorant Garamond', serif;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: line-fade-in 0.8s ease-out forwards;
+        }
+
+        .poem-line:nth-child(1) {
+            animation-delay: 0.8s;
+        }
+
+        .poem-line:nth-child(2) {
+            animation-delay: 1.1s;
+        }
+
+        .poem-line:nth-child(3) {
+            animation-delay: 1.4s;
+        }
+
+        .poem-line:nth-child(4) {
+            animation-delay: 1.7s;
+        }
+
+        .poem-line:nth-child(5) {
+            animation-delay: 2s;
+        }
+
+        .poem-line:nth-child(6) {
+            animation-delay: 2.3s;
+        }
+
+        .poem-line:nth-child(7) {
+            animation-delay: 2.6s;
+        }
+
+        .poem-line:nth-child(8) {
+            animation-delay: 2.9s;
+        }
+
+        @keyframes line-fade-in {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Author signature */
+        .author {
+            font-family: 'Playfair Display', serif;
+            opacity: 0;
+            animation: author-appear 1s ease-out 3.5s forwards;
+        }
+
+        @keyframes author-appear {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Button animation */
+        .next-btn {
+            font-family: 'Playfair Display', serif;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: btn-appear 0.8s ease-out 4s forwards;
+        }
+
+        @keyframes btn-appear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .next-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: btn-shine 3s infinite;
+        }
+
+        @keyframes btn-shine {
+            0% {
+                left: -100%;
+            }
+
+            50%,
+            100% {
+                left: 100%;
+            }
+        }
+
+        .next-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Floating feather */
+        .feather {
+            position: absolute;
+            font-size: 24px;
+            animation: feather-float 6s infinite ease-in-out;
+            opacity: 0.7;
+        }
+
+        .feather-1 {
+            top: 40%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .feather-2 {
+            top: 60%;
+            right: 8%;
+            animation-delay: 2s;
+        }
+
+        @keyframes feather-float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-15px) rotate(10deg);
+            }
+
+            50% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            75% {
+                transform: translateY(15px) rotate(-10deg);
+            }
+        }
+
+        /* Ink drop effect */
+        .ink-drop {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(75, 0, 130, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translateX(-50%) scale(0);
+            animation: ink-spread 4s ease-out 1s infinite;
+        }
+
+        @keyframes ink-spread {
+            0% {
+                transform: translateX(-50%) scale(0);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateX(-50%) scale(3);
+                opacity: 0;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-hint {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Breathing glow on poem container */
+        .poem-container {
+            animation: container-breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes container-breathe {
+
+            0%,
+            100% {
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+            }
+
+            50% {
+                box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
+            }
+        }
+
+        /* Quote marks animation */
+        .quote-mark {
+            font-family: 'Playfair Display', serif;
+            opacity: 0;
+            animation: quote-fade 1s ease-out 0.3s forwards;
+        }
+
+        @keyframes quote-fade {
+            to {
+                opacity: 0.3;
+            }
+        }
+    </style>
+</head>
+
+<body class="h-full">
+    <audio autoplay loop preload="auto" aria-hidden="true">
+        <source src="f5.mp3" type="audio/mpeg">
+    </audio>
+    <div class="poem-bg w-full h-full flex flex-col items-center justify-between py-8 px-6 overflow-auto">
+
+        <!-- Stars -->
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+
+        <!-- Moon -->
+        <div class="moon"></div>
+
+        <!-- Floating particles -->
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+
+        <!-- Floating feathers -->
+        <div class="feather feather-1">🪶</div>
+        <div class="feather feather-2">🪶</div>
+
+        <!-- Ink drop effect -->
+        <div class="ink-drop"></div>
+
+        <!-- Main content -->
+        <div class="relative z-10 w-full max-w-sm flex flex-col items-center flex-1 justify-center">
+
+            <!-- Title -->
+            <h1 id="poem-title" class="poem-title text-3xl text-amber-200 mb-3 text-center tracking-wide">
+                কিছু সুন্দর স্মৃতি
+
+            </h1>
+
+            <!-- Decorative line -->
+            <div class="deco-line mb-8"></div>
+
+            <!-- Poem container -->
+            <div class="poem-container relative bg-white/5 backdrop-blur-sm rounded-3xl p-6 border border-amber-200/20">
+
+                <!-- Opening quote -->
+                <span class="quote-mark absolute -top-2 -left-1 text-6xl text-amber-300/30">"</span>
+
+                <!-- Poem lines -->
+                <div class="space-y-6 text-center">
+                    <p class="poem-line text-lg text-amber-50/90 leading-relaxed">
+                        সময় বদলাবে, মানুষ বদলাবে,
+                    </p>
+                    <p class="poem-line text-lg text-amber-50/90 leading-relaxed">
+                        হয়তো আমাদের কথাও একদিন কমে যাবে…
+                    </p>
+                    <p class="poem-line text-lg text-amber-50/90 leading-relaxed">
+                        তবুও কিছু সুন্দর স্মৃতি থেকে যাবে,
+                    </p>
+                    <p class="poem-line text-lg text-amber-50/90 leading-relaxed">
+                        যেখানে তুমি থাকবে—একজন খুব ভালো বন্ধু হয়ে। ❤️
+                    </p>
+
+                </div>
+
+                <!-- Closing quote -->
+                <span class="quote-mark absolute -bottom-4 -right-1 text-6xl text-amber-300/30 rotate-180">"</span>
+            </div>
+
+        </div>
+
+        <!-- Bottom section with button -->
+        <div class="relative z-10 w-full max-w-sm flex flex-col items-center mt-8">
+
+            <!-- Scroll hint -->
+            <div class="scroll-hint text-amber-200/50 text-xs mb-4 tracking-wider">
+                ↓ next ↓
+            </div>
+
+            <!-- Next button -->
+            <button onclick="goToEnglishPage()"
+                class="next-btn bg-gradient-to-r from-amber-600 to-amber-500 text-white px-12 py-4 rounded-full text-lg tracking-wider shadow-lg shadow-amber-900/30 border border-amber-400/30 transition-all duration-300 hover:shadow-amber-500/40 hover:shadow-xl active:shadow-md">
+                ✨ NEXT ✨
+            </button>
+
+            <!-- Page indicator -->
+            <div class="flex gap-2 mt-6">
+                <div class="w-2 h-2 rounded-full bg-amber-400"></div>
+                <div class="w-2 h-2 rounded-full bg-amber-400"></div>
+                <div class="w-2 h-2 rounded-full bg-amber-400"></div>
+                <div class="w-2 h-2 rounded-full bg-amber-200/30"></div>
+                <div class="w-2 h-2 rounded-full bg-amber-200/30"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function goToEnglishPage() {
+            window.location.href = 'aiml.html';
+        }
+    </script>
+</body>
+
+</html>

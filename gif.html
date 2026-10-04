@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Gift</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 28px clamp(14px, 4vw, 48px) 48px;
+            color: #fff4f7;
+            background:
+                radial-gradient(ellipse at 16% 0%, rgba(255, 119, 180, 0.18), transparent 38%),
+                linear-gradient(145deg, #160d25, #31183e 52%, #1a102e);
+            font-family: "Segoe UI", Tahoma, sans-serif;
+        }
+
+        header {
+            max-width: 1100px;
+            margin: 0 auto 28px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            color: #ffe2f1;
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            text-shadow: 0 4px 28px rgba(255, 128, 190, 0.35);
+        }
+
+        #gallery-status {
+            margin: 12px 0 0;
+            color: #ffd6e8;
+            overflow-wrap: anywhere;
+        }
+
+        #gallery-status:empty {
+            display: none;
+        }
+
+        .gift-gallery {
+            columns: 2;
+            column-gap: 16px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .gift-card {
+            display: block;
+            width: 100%;
+            margin: 0 0 16px;
+            overflow: hidden;
+            break-inside: avoid;
+            border: 1px solid rgba(255, 226, 242, 0.24);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.25);
+            text-decoration: none;
+        }
+
+        .gift-image-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .gift-image-frame img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-card:hover img {
+            transform: scale(1.04);
+        }
+
+        .gift-placeholder {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-content: center;
+            gap: 8px;
+            padding: 16px;
+            color: #ffe2f1;
+            background:
+                radial-gradient(circle at 30% 25%, rgba(255, 153, 199, 0.2), transparent 46%),
+                linear-gradient(145deg, #291633, #432344);
+            text-align: center;
+        }
+
+        .gift-placeholder[hidden] {
+            display: none;
+        }
+
+        .gift-placeholder strong {
+            overflow-wrap: anywhere;
+        }
+
+        .gift-placeholder span {
+            color: rgba(255, 244, 248, 0.75);
+            font-size: 0.88rem;
+        }
+
+        @media (min-width: 560px) {
+            .gift-gallery {
+                columns: 3;
+                column-gap: 18px;
+            }
+        }
+
+        @media (min-width: 900px) {
+            .gift-gallery {
+                columns: 4;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .gift-image-frame img {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Choose Your Gift</h1>
+        <p id="gallery-status" role="status" aria-live="polite"></p>
+    </header>
+    <main id="gift-gallery" class="gift-gallery" aria-label="Choose a gift"></main>
+
+    <script>
+        const giftGallery = document.getElementById("gift-gallery");
+        const galleryStatus = document.getElementById("gallery-status");
+        const missingImages = [];
+
+        for (let giftNumber = 1; giftNumber <= 14; giftNumber++) {
+            const imageName = `gi${giftNumber}.png`;
+            const card = document.createElement("a");
+            card.className = "gift-card";
+            card.href = `gift-details.html?gift=${giftNumber}`;
+            card.setAttribute("aria-label", `View gift ${giftNumber}`);
+
+            const frame = document.createElement("div");
+            frame.className = "gift-image-frame";
+
+            const image = document.createElement("img");
+            image.src = imageName;
+            image.alt = `Gift ${giftNumber}`;
+            image.loading = giftNumber > 8 ? "lazy" : "eager";
+
+            const placeholder = document.createElement("div");
+            placeholder.className = "gift-placeholder";
+            placeholder.hidden = true;
+            placeholder.innerHTML = `<strong>${imageName} not found</strong><span>Add it beside gif.html to show this gift.</span>`;
+
+            image.addEventListener("error", function () {
+                image.hidden = true;
+                placeholder.hidden = false;
+                missingImages.push(imageName);
+                galleryStatus.textContent = `Gift images not found: ${missingImages.join(", ")}`;
+            });
+
+            frame.append(image, placeholder);
+            card.appendChild(frame);
+            giftGallery.appendChild(card);
+        }
+    </script>
+</body>
+
+</html>

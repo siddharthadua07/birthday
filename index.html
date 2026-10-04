@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
+    <title>Happy Birthday!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Pacifico&amp;family=Quicksand:wght@400;600;700&amp;display=swap"
+        rel="stylesheet">
+    <style>
+        html,
+        body {
+            box-sizing: border-box;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .font-pacifico {
+            font-family: 'Pacifico', cursive;
+        }
+
+        .font-quicksand {
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(5deg);
+            }
+        }
+
+        @keyframes floatReverse {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-12px) rotate(-5deg);
+            }
+        }
+
+        @keyframes confetti {
+            0% {
+                transform: translateY(-100%) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(1000px) rotate(720deg);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes sparkle {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-20px);
+            }
+
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1));
+            }
+        }
+
+        @keyframes wiggle {
+
+            0%,
+            100% {
+                transform: rotate(-3deg);
+            }
+
+            50% {
+                transform: rotate(3deg);
+            }
+        }
+
+        @keyframes rainbow {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        .balloon {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .balloon-reverse {
+            animation: floatReverse 3.5s ease-in-out infinite;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confetti linear infinite;
+        }
+
+        .sparkle {
+            position: absolute;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+
+        .cake-container {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .slide-up {
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        .bounce-text {
+            animation: bounce 2s ease infinite;
+        }
+
+        .glow-effect {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .wiggle {
+            animation: wiggle 0.5s ease-in-out infinite;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #ff6b6b);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbow 3s linear infinite;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        #app {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+    </style>
+    <style>
+        @view-transition {
+            navigation: auto;
+        }
+    </style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+</head>
+
+<body class="h-full font-quicksand overflow-auto">
+    <div id="app" class="w-full h-full relative overflow-hidden"><!-- Animated Background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-purple-900 via-pink-800 to-orange-700"><!-- Stars -->
+            <div id="stars-container"></div>
+        </div><!-- Confetti Container -->
+        <div id="confetti-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+        <!-- Sparkles Container -->
+        <div id="sparkles-container" class="absolute inset-0 pointer-events-none"></div><!-- Main Content -->
+        <div class="relative z-10 flex flex-col items-center justify-start pt-20 pb-20 px-3 min-h-full">
+            <!-- Balloons Left -->
+            <div class="absolute left-2 top-16">
+                <svg class="w-12 h-16 balloon" viewbox="0 0 100 150" style="animation-delay: 0s;">
+                    <defs>
+                        <lineargradient id="balloon1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ff6b6b" />
+                            <stop offset="100%" style="stop-color:#ee5a5a" />
+                        </lineargradient>
+                    </defs>
+                    <ellipse cx="50" cy="50" rx="40" ry="50" fill="url(#balloon1)" />
+                    <ellipse cx="35" cy="35" rx="10" ry="15" fill="rgba(255,255,255,0.3)" />
+                    <path d="M50 100 Q45 110 50 115 Q55 110 50 100" fill="#ee5a5a" />
+                    <line x1="50" y1="115" x2="50" y2="150" stroke="#feca57" stroke-width="2" />
+                </svg>
+            </div>
+            <div class="absolute left-1 top-40">
+                <svg class="w-10 h-14 balloon-reverse" viewbox="0 0 100 150" style="animation-delay: 0.5s;">
+                    <defs>
+                        <lineargradient id="balloon2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#48dbfb" />
+                            <stop offset="100%" style="stop-color:#0abde3" />
+                        </lineargradient>
+                    </defs>
+                    <ellipse cx="50" cy="50" rx="40" ry="50" fill="url(#balloon2)" />
+                    <ellipse cx="35" cy="35" rx="10" ry="15" fill="rgba(255,255,255,0.3)" />
+                    <path d="M50 100 Q45 110 50 115 Q55 110 50 100" fill="#0abde3" />
+                    <line x1="50" y1="115" x2="50" y2="150" stroke="#feca57" stroke-width="2" />
+                </svg>
+            </div><!-- Balloons Right -->
+            <div class="absolute right-2 top-14">
+                <svg class="w-12 h-16 balloon" viewbox="0 0 100 150" style="animation-delay: 0.3s;">
+                    <defs>
+                        <lineargradient id="balloon3" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#feca57" />
+                            <stop offset="100%" style="stop-color:#f9ca24" />
+                        </lineargradient>
+                    </defs>
+                    <ellipse cx="50" cy="50" rx="40" ry="50" fill="url(#balloon3)" />
+                    <ellipse cx="35" cy="35" rx="10" ry="15" fill="rgba(255,255,255,0.3)" />
+                    <path d="M50 100 Q45 110 50 115 Q55 110 50 100" fill="#f9ca24" />
+                    <line x1="50" y1="115" x2="50" y2="150" stroke="#ff6b6b" stroke-width="2" />
+                </svg>
+            </div>
+            <div class="absolute right-1 top-44">
+                <svg class="w-10 h-14 balloon-reverse" viewbox="0 0 100 150" style="animation-delay: 0.8s;">
+                    <defs>
+                        <lineargradient id="balloon4" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ff9ff3" />
+                            <stop offset="100%" style="stop-color:#f368e0" />
+                        </lineargradient>
+                    </defs>
+                    <ellipse cx="50" cy="50" rx="40" ry="50" fill="url(#balloon4)" />
+                    <ellipse cx="35" cy="35" rx="10" ry="15" fill="rgba(255,255,255,0.3)" />
+                    <path d="M50 100 Q45 110 50 115 Q55 110 50 100" fill="#f368e0" />
+                    <line x1="50" y1="115" x2="50" y2="150" stroke="#48dbfb" stroke-width="2" />
+                </svg>
+            </div><!-- Title -->
+            <div class="slide-up mb-4 mt-2" style="animation-delay: 0.2s;">
+                <h1 class="text-4xl font-pacifico gradient-text text-center bounce-text leading-tight">Happy Birthday!
+                </h1>
+            </div><!-- Cake -->
+            <div class="cake-container slide-up glow-effect mb-6" style="animation-delay: 0.4s;">
+                <svg class="w-40 h-40" viewbox="0 0 200 200"><!-- Cake Base -->
+                    <ellipse cx="100" cy="170" rx="80" ry="15" fill="#8B4513" />
+                    <rect x="20" y="130" width="160" height="40" fill="#D2691E" rx="5" />
+                    <ellipse cx="100" cy="130" rx="80" ry="15" fill="#DEB887" /> <!-- Middle Layer -->
+                    <rect x="35" y="95" width="130" height="35" fill="#FFB6C1" rx="5" />
+                    <ellipse cx="100" cy="95" rx="65" ry="12" fill="#FFC0CB" /> <!-- Top Layer -->
+                    <rect x="50" y="65" width="100" height="30" fill="#FF69B4" rx="5" />
+                    <ellipse cx="100" cy="65" rx="50" ry="10" fill="#FF1493" /> <!-- Frosting drips -->
+                    <path d="M30 130 Q35 145 30 150 Q25 145 30 130" fill="#FFF8DC" />
+                    <path d="M60 130 Q65 150 60 155 Q55 150 60 130" fill="#FFF8DC" />
+                    <path d="M90 130 Q95 145 90 148 Q85 145 90 130" fill="#FFF8DC" />
+                    <path d="M120 130 Q125 152 120 157 Q115 152 120 130" fill="#FFF8DC" />
+                    <path d="M150 130 Q155 148 150 153 Q145 148 150 130" fill="#FFF8DC" />
+                    <path d="M170 130 Q175 142 170 145 Q165 142 170 130" fill="#FFF8DC" /> <!-- Candles -->
+                    <rect x="70" y="35" width="6" height="30" fill="#87CEEB" rx="2" />
+                    <rect x="97" y="30" width="6" height="35" fill="#FFD700" rx="2" />
+                    <rect x="124" y="35" width="6" height="30" fill="#98FB98" rx="2" /> <!-- Flames -->
+                    <ellipse cx="73" cy="30" rx="5" ry="10" fill="#FF6347" class="wiggle" />
+                    <ellipse cx="73" cy="28" rx="3" ry="6" fill="#FFD700" />
+                    <ellipse cx="100" cy="25" rx="6" ry="12" fill="#FF6347" class="wiggle"
+                        style="animation-delay: 0.1s;" />
+                    <ellipse cx="100" cy="22" rx="4" ry="7" fill="#FFD700" />
+                    <ellipse cx="127" cy="30" rx="5" ry="10" fill="#FF6347" class="wiggle"
+                        style="animation-delay: 0.2s;" />
+                    <ellipse cx="127" cy="28" rx="3" ry="6" fill="#FFD700" /> <!-- Decorations -->
+                    <circle cx="40" cy="145" r="4" fill="#FF1493" />
+                    <circle cx="60" cy="150" r="3" fill="#FFD700" />
+                    <circle cx="80" cy="145" r="4" fill="#48dbfb" />
+                    <circle cx="100" cy="148" r="3" fill="#98FB98" />
+                    <circle cx="120" cy="145" r="4" fill="#FF1493" />
+                    <circle cx="140" cy="150" r="3" fill="#FFD700" />
+                    <circle cx="160" cy="145" r="4" fill="#48dbfb" />
+                </svg>
+            </div><!-- Name -->
+            <div class="slide-up mb-3" style="animation-delay: 0.6s;">
+                <p id="birthday-name" class="text-2xl font-bold text-white text-center drop-shadow-lg px-2">🎉 Dear
+                    Friend 🎉</p>
+            </div><!-- Message -->
+            <div class="slide-up max-w-sm mx-auto px-3 mb-6" style="animation-delay: 0.8s;">
+                <p id="birthday-message" class="text-sm text-white/90 text-center leading-relaxed font-quicksand">
+                    Wishing you a day filled with love, laughter, and all your heart's desires! May this special day
+                    bring you endless joy and beautiful memories! 🎂✨</p>
+            </div><!-- Gift Box and Buttons -->
+            <div class="slide-up flex gap-6" style="animation-delay: 1s;"><!-- Gift Box -->
+                <div class="relative cursor-pointer transform active:scale-95 transition-transform duration-200"
+                    onclick="showSurprise()">
+                    <svg class="w-20 h-20" viewbox="0 0 100 100"><!-- Box -->
+                        <rect x="10" y="40" width="80" height="55" fill="#ff6b6b" rx="5" />
+                        <rect x="10" y="40" width="80" height="15" fill="#ee5a5a" rx="3" /> <!-- Ribbon Vertical -->
+                        <rect x="43" y="40" width="14" height="55" fill="#feca57" /> <!-- Ribbon Horizontal -->
+                        <rect x="10" y="45" width="80" height="10" fill="#feca57" /> <!-- Bow -->
+                        <ellipse cx="35" cy="35" rx="15" ry="12" fill="#feca57" />
+                        <ellipse cx="65" cy="35" rx="15" ry="12" fill="#feca57" />
+                        <circle cx="50" cy="40" r="8" fill="#f9ca24" /> <!-- Ribbon tails -->
+                        <path d="M25 35 Q15 50 20 60" stroke="#feca57" stroke-width="6" fill="none" />
+                        <path d="M75 35 Q85 50 80 60" stroke="#feca57" stroke-width="6" fill="none" />
+                    </svg>
+                    <p id="gift-text" class="text-white text-xs text-center mt-1 animate-pulse">
+                        Click me! 🎁
+                    </p>
+
+                </div><!-- Second Button -->
+                <div class="relative cursor-pointer transform active:scale-95 transition-transform duration-200"
+                    onclick="goToHindiPage()">
+
+                    <svg class="w-20 h-20" viewbox="0 0 100 100"><!-- Box -->
+                        <rect x="10" y="40" width="80" height="55" fill="#48dbfb" rx="5" />
+                        <rect x="10" y="40" width="80" height="15" fill="#0abde3" rx="3" /> <!-- Ribbon Vertical -->
+                        <rect x="43" y="40" width="14" height="55" fill="#ff9ff3" /> <!-- Ribbon Horizontal -->
+                        <rect x="10" y="45" width="80" height="10" fill="#ff9ff3" /> <!-- Bow -->
+                        <ellipse cx="35" cy="35" rx="15" ry="12" fill="#ff9ff3" />
+                        <ellipse cx="65" cy="35" rx="15" ry="12" fill="#ff9ff3" />
+                        <circle cx="50" cy="40" r="8" fill="#f368e0" /> <!-- Ribbon tails -->
+                        <path d="M25 35 Q15 50 20 60" stroke="#ff9ff3" stroke-width="6" fill="none" />
+                        <path d="M75 35 Q85 50 80 60" stroke="#ff9ff3" stroke-width="6" fill="none" />
+                    </svg>
+                    <p class="text-white text-xs text-center mt-1 animate-pulse">YOUR GIFT 💙</p>
+                </div>
+            </div><!-- Surprise Message (hidden initially) -->
+            <div id="surprise" class="hidden mt-6 text-center">
+                <p class="text-2xl font-pacifico text-yellow-300 animate-bounce">🌟 You're Amazing! 🌟</p>
+                <div class="flex justify-center gap-3 mt-3 text-3xl"><span class="animate-bounce"
+                        style="animation-delay: 0s;">🎈</span> <span class="animate-bounce"
+                        style="animation-delay: 0.1s;">🎊</span> <span class="animate-bounce"
+                        style="animation-delay: 0.2s;">🎁</span> <span class="animate-bounce"
+                        style="animation-delay: 0.3s;">🎉</span> <span class="animate-bounce"
+                        style="animation-delay: 0.4s;">💖</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const defaultConfig = {
+            birthday_name: "SUMANA 😊😊",
+            birthday_message: "Wishing you a day filled with love, laughter, and all your heart's desires! May this special day bring you endless joy and beautiful memories! 🎂✨",
+            background_color: "#581c87",
+            text_color: "#ffffff",
+            accent_color: "#feca57",
+            font_family: "Quicksand",
+            font_size: 18
+        };
+
+        let config = { ...defaultConfig };
+
+        // Create confetti
+        function createConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#98FB98', '#FFD700'];
+            const shapes = ['square', 'circle', 'triangle'];
+
+            for (let i = 0; i < 40; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                confetti.style.animationDelay = Math.random() * 5 + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                if (shape === 'circle') {
+                    confetti.style.borderRadius = '50%';
+                } else if (shape === 'triangle') {
+                    confetti.style.width = '0';
+                    confetti.style.height = '0';
+                    confetti.style.backgroundColor = 'transparent';
+                    confetti.style.borderLeft = '5px solid transparent';
+                    confetti.style.borderRight = '5px solid transparent';
+                    confetti.style.borderBottom = '10px solid ' + colors[Math.floor(Math.random() * colors.length)];
+                }
+
+                container.appendChild(confetti);
+            }
+        }
+
+        // Create sparkles
+        function createSparkles() {
+            const container = document.getElementById('sparkles-container');
+
+            for (let i = 0; i < 25; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.innerHTML = '✨';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.fontSize = (Math.random() * 16 + 8) + 'px';
+                sparkle.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(sparkle);
+            }
+        }
+
+        // Create stars
+        function createStars() {
+            const container = document.getElementById('stars-container');
+
+            for (let i = 0; i < 40; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(star);
+            }
+        }
+
+        function goToHindiPage() {
+            window.location.href = 'disclamer.html';
+        }
+
+        // Show surprise
+        let giftTextChanged = false;
+        function showSurprise() {
+
+            if (!giftTextChanged) {
+                const giftText = document.getElementById('gift-text');
+                giftText.textContent = 'Click again 🔁';
+                giftTextChanged = true;
+            }
+            const surprise = document.getElementById('surprise');
+            surprise.classList.remove('hidden');
+            surprise.classList.add('slide-up');
+
+            // Add extra confetti burst
+            const container = document.getElementById('confetti-container');
+            const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#98FB98', '#FFD700'];
+
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+                confetti.style.left = (40 + Math.random() * 20) + '%';
+                confetti.style.top = '60%';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                container.appendChild(confetti);
+            }
+        }
+
+        // Render UI
+        async function onConfigChange(cfg) {
+            const nameEl = document.getElementById('birthday-name');
+            const messageEl = document.getElementById('birthday-message');
+
+            if (nameEl) {
+                nameEl.textContent = `🎉 ${cfg.birthday_name || defaultConfig.birthday_name} 🎉`;
+            }
+
+            if (messageEl) {
+                messageEl.textContent = cfg.birthday_message || defaultConfig.birthday_message;
+            }
+
+            // Apply font
+            const customFont = cfg.font_family || defaultConfig.font_family;
+            document.body.style.fontFamily = `${customFont}, Quicksand, sans-serif`;
+
+            // Apply font size scaling
+            const baseSize = cfg.font_size || defaultConfig.font_size;
+            if (nameEl) nameEl.style.fontSize = `${baseSize * 1.4}px`;
+            if (messageEl) messageEl.style.fontSize = `${baseSize * 0.85}px`;
+        }
+
+        function mapToCapabilities(cfg) {
+            return {
+                recolorables: [
+                    {
+                        get: () => cfg.background_color || defaultConfig.background_color,
+                        set: (value) => {
+                            cfg.background_color = value;
+                            window.elementSdk.setConfig({ background_color: value });
+                        }
+                    },
+                    {
+                        get: () => cfg.text_color || defaultConfig.text_color,
+                        set: (value) => {
+                            cfg.text_color = value;
+                            window.elementSdk.setConfig({ text_color: value });
+                        }
+                    },
+                    {
+                        get: () => cfg.accent_color || defaultConfig.accent_color,
+                        set: (value) => {
+                            cfg.accent_color = value;
+                            window.elementSdk.setConfig({ accent_color: value });
+                        }
+                    }
+                ],
+                borderables: [],
+                fontEditable: {
+                    get: () => cfg.font_family || defaultConfig.font_family,
+                    set: (value) => {
+                        cfg.font_family = value;
+                        window.elementSdk.setConfig({ font_family: value });
+                    }
+                },
+                fontSizeable: {
+                    get: () => cfg.font_size || defaultConfig.font_size,
+                    set: (value) => {
+                        cfg.font_size = value;
+                        window.elementSdk.setConfig({ font_size: value });
+                    }
+                }
+            };
+        }
+
+        function mapToEditPanelValues(cfg) {
+            return new Map([
+                ["birthday_name", cfg.birthday_name || defaultConfig.birthday_name],
+                ["birthday_message", cfg.birthday_message || defaultConfig.birthday_message]
+            ]);
+        }
+
+        // Initialize
+        createConfetti();
+        createSparkles();
+        createStars();
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        } else {
+            onConfigChange(defaultConfig);
+        }
+    </script>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9c9b439f40924f8f',t:'MTc3MDM4NzM3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>

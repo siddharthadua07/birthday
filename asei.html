@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 32px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            color: #fff4f7;
+            background:
+                radial-gradient(ellipse at 20% 15%, rgba(255, 119, 180, 0.2), transparent 42%),
+                radial-gradient(ellipse at 80% 85%, rgba(147, 112, 219, 0.24), transparent 44%),
+                linear-gradient(135deg, #160d25, #391b45 55%, #1a102e);
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            color: #ffe2f1;
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            text-shadow: 0 4px 28px rgba(255, 128, 190, 0.35);
+        }
+
+        .carousel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(10px, 3vw, 24px);
+        }
+
+        .image-frame {
+            position: relative;
+            width: min(65vw, 400px);
+            aspect-ratio: 2.5 / 3;
+            overflow: hidden;
+            border: 2px solid rgba(255, 226, 242, 0.7);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+        }
+
+        .image-frame img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-error {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-content: center;
+            gap: 8px;
+            padding: 24px;
+            color: #ffe2f1;
+            background: rgba(24, 13, 36, 0.94);
+            font-size: 0.95rem;
+        }
+
+        .image-error[hidden] {
+            display: none;
+        }
+
+        .image-error strong {
+            overflow-wrap: anywhere;
+        }
+
+        .arrow-btn,
+        #next-btn {
+            border: 1px solid rgba(255, 226, 242, 0.7);
+            color: #351629;
+            background: linear-gradient(135deg, #ffd4e6, #ff9bc8);
+            box-shadow: 0 10px 28px rgba(255, 125, 184, 0.25);
+            cursor: pointer;
+        }
+
+        .arrow-btn {
+            width: clamp(40px, 10vw, 52px);
+            height: clamp(40px, 10vw, 52px);
+            flex: 0 0 auto;
+            border-radius: 50%;
+            font-size: 1.7rem;
+            line-height: 1;
+        }
+
+        .arrow-btn:hover,
+        #next-btn:hover {
+            filter: brightness(1.08);
+        }
+
+        .arrow-btn:focus-visible,
+        #next-btn:focus-visible {
+            outline: 3px solid #fff;
+            outline-offset: 4px;
+        }
+
+        #image-counter {
+            min-width: 64px;
+            color: #ffe2f1;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+        }
+
+        #next-btn {
+            margin-top: 4px;
+            padding: 12px 34px;
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 700;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+        }
+
+        #next-btn.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            .image-frame {
+                width: min(62vw, 320px);
+            }
+
+            body {
+                gap: 16px;
+                padding: 24px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <audio autoplay loop preload="auto" aria-hidden="true">
+        <source src="f7.mp3" type="audio/mpeg">
+    </audio>
+    <h1>Photo Gallery</h1>
+    <div class="carousel" aria-label="Image gallery">
+        <button id="previous-btn" class="arrow-btn" type="button" aria-label="Previous image">‹</button>
+        <div class="image-frame">
+            <img id="gallery-image" src="as1.png" alt="Gallery image 1 of 11">
+            <div id="image-error" class="image-error" role="status" hidden>
+                <strong id="missing-image-name"></strong>
+                <span>Add this image to the same folder as asei.html.</span>
+            </div>
+        </div>
+        <button id="next-image-btn" class="arrow-btn" type="button" aria-label="Next image">›</button>
+    </div>
+    <div id="image-counter" aria-live="polite">1 / 11</div>
+    <button id="next-btn" type="button">Next</button>
+
+    <script>
+        const totalImages = 11;
+        let currentImage = 1;
+        const galleryImage = document.getElementById("gallery-image");
+        const imageError = document.getElementById("image-error");
+        const missingImageName = document.getElementById("missing-image-name");
+        const imageCounter = document.getElementById("image-counter");
+
+        function showImage(imageNumber) {
+            currentImage = (imageNumber - 1 + totalImages) % totalImages + 1;
+            const imageName = `as${currentImage}.png`;
+
+            imageError.hidden = true;
+            galleryImage.hidden = false;
+            galleryImage.alt = `Gallery image ${currentImage} of ${totalImages}`;
+            imageCounter.textContent = `${currentImage} / ${totalImages}`;
+            galleryImage.src = imageName;
+        }
+
+        galleryImage.addEventListener("error", function () {
+            missingImageName.textContent = `${galleryImage.getAttribute("src")} was not found.`;
+            galleryImage.hidden = true;
+            imageError.hidden = false;
+        });
+
+        document.getElementById("previous-btn").addEventListener("click", function () {
+            showImage(currentImage - 1);
+        });
+
+        document.getElementById("next-image-btn").addEventListener("click", function () {
+            showImage(currentImage + 1);
+        });
+
+        window.setTimeout(function () {
+            document.getElementById("next-btn").classList.add("visible");
+        }, 30000);
+
+        document.getElementById("next-btn").addEventListener("click", function () {
+            window.location.href = "img.html";
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="hi" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Animated Poem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&amp;family=Space+Grotesk:wght@400;600;700&amp;display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .poem-bg {
+            background: linear-gradient(135deg, #0a0f1f 0%, #0f1535 50%, #050812 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Neural network background */
+        svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* Data node particles */
+        .node-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #00ffff 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse-data 3s infinite ease-in-out;
+            box-shadow: 0 0 8px #00ffff;
+        }
+
+        .node-particle:nth-child(1) {
+            left: 10%;
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .node-particle:nth-child(2) {
+            left: 30%;
+            top: 15%;
+            animation-delay: 0.5s;
+        }
+
+        .node-particle:nth-child(3) {
+            left: 50%;
+            top: 30%;
+            animation-delay: 1s;
+        }
+
+        .node-particle:nth-child(4) {
+            left: 70%;
+            top: 25%;
+            animation-delay: 1.5s;
+        }
+
+        .node-particle:nth-child(5) {
+            left: 85%;
+            top: 35%;
+            animation-delay: 2s;
+        }
+
+        .node-particle:nth-child(6) {
+            left: 20%;
+            top: 70%;
+            animation-delay: 0.8s;
+        }
+
+        .node-particle:nth-child(7) {
+            left: 60%;
+            top: 75%;
+            animation-delay: 1.3s;
+        }
+
+        .node-particle:nth-child(8) {
+            left: 80%;
+            top: 65%;
+            animation-delay: 1.8s;
+        }
+
+        @keyframes pulse-data {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Neural connections */
+        .connection-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, transparent);
+            animation: flow-data 3s infinite ease-in-out;
+            opacity: 0;
+        }
+
+        .connection-1 {
+            width: 200px;
+            top: 25%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .connection-2 {
+            width: 250px;
+            top: 50%;
+            left: 20%;
+            animation-delay: 0.5s;
+        }
+
+        .connection-3 {
+            width: 180px;
+            top: 70%;
+            left: 30%;
+            animation-delay: 1s;
+        }
+
+        @keyframes flow-data {
+            0% {
+                opacity: 0;
+                background-position: 0 0;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 0;
+                background-position: 500px 0;
+            }
+        }
+
+        /* Processing core animation */
+        .core {
+            position: absolute;
+            top: 12%;
+            right: 8%;
+            width: 100px;
+            height: 100px;
+            border: 2px solid #00ffff;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.2) 0%, transparent 70%);
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.4), inset 0 0 30px rgba(0, 255, 255, 0.2);
+            animation: core-spin 6s linear infinite;
+        }
+
+        .core::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 1.5px solid #ff00ff;
+            border-radius: 50%;
+            animation: core-spin-reverse 4s linear infinite;
+        }
+
+        .core::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ffff00 0%, transparent 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 30px #ffff00;
+            animation: core-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes core-spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes core-spin-reverse {
+            from {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+        }
+
+        @keyframes core-pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px #ffff00;
+            }
+
+            50% {
+                box-shadow: 0 0 40px #ffff00;
+            }
+        }
+
+        /* Scanning lines */
+        .scan-beam {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            animation: scan-down 4s infinite ease-in-out;
+            opacity: 0.3;
+        }
+
+        @keyframes scan-down {
+            0% {
+                top: 0%;
+            }
+
+            100% {
+                top: 100%;
+            }
+        }
+
+        /* Title animation */
+        .poem-title {
+            font-family: 'Space Grotesk', sans-serif;
+            animation: title-decode 2s ease-out forwards;
+            opacity: 0;
+            transform: scaleX(0.8);
+            color: #00ffff;
+            text-shadow: 0 0 30px #00ffff, 0 0 60px rgba(0, 255, 255, 0.4);
+            letter-spacing: 4px;
+            font-weight: 700;
+        }
+
+        @keyframes title-decode {
+            to {
+                opacity: 1;
+                transform: scaleX(1);
+                text-shadow: 0 0 40px #00ffff, 0 0 80px rgba(0, 255, 255, 0.6);
+            }
+        }
+
+        /* Decorative line */
+        .deco-line {
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, transparent);
+            animation: line-expand 1.5s ease-out 0.7s forwards;
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        @keyframes line-expand {
+            to {
+                width: 200px;
+            }
+        }
+
+        /* Poem lines animation */
+        .poem-line {
+            font-family: 'IBM Plex Mono', monospace;
+            opacity: 0;
+            transform: translateX(-40px);
+            animation: line-fade-matrix 1s ease-out forwards;
+            color: #00ffff;
+            font-size: 1rem;
+            line-height: 2.2;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .poem-line:nth-child(1) {
+            animation-delay: 1s;
+        }
+
+        .poem-line:nth-child(2) {
+            animation-delay: 1.2s;
+        }
+
+        .poem-line:nth-child(3) {
+            animation-delay: 1.4s;
+        }
+
+        .poem-line:nth-child(4) {
+            animation-delay: 1.6s;
+        }
+
+        .poem-line:nth-child(5) {
+            animation-delay: 1.8s;
+        }
+
+        .poem-line:nth-child(6) {
+            animation-delay: 2s;
+            color: #ff00ff;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+        }
+
+        .poem-line:nth-child(7) {
+            animation-delay: 2.2s;
+            color: #ff00ff;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+        }
+
+        .poem-line:nth-child(8) {
+            animation-delay: 2.4s;
+            color: #ff00ff;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+        }
+
+        @keyframes line-fade-matrix {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Author signature */
+        .author {
+            font-family: 'Space Grotesk', sans-serif;
+            opacity: 0;
+            animation: author-appear 1s ease-out 4.2s forwards;
+            color: #ffff00;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255, 255, 0, 0.6);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        @keyframes author-appear {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Button animation */
+        .next-btn {
+            font-family: 'Space Grotesk', sans-serif;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: btn-appear 0.9s ease-out 4.8s forwards;
+            letter-spacing: 2px;
+        }
+
+        @keyframes btn-appear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .next-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: btn-scan 2.5s infinite;
+        }
+
+        @keyframes btn-scan {
+            0% {
+                left: -100%;
+            }
+
+            50%,
+            100% {
+                left: 100%;
+            }
+        }
+
+        .next-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* Poem container */
+        .poem-container {
+            animation: container-neural 3.5s ease-in-out infinite;
+            background: rgba(10, 15, 31, 0.8);
+            backdrop-filter: blur(12px);
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 30px rgba(0, 255, 255, 0.1);
+            position: relative;
+        }
+
+        @keyframes container-neural {
+
+            0%,
+            100% {
+                box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 30px rgba(0, 255, 255, 0.1);
+                border-color: #00ffff;
+            }
+
+            50% {
+                box-shadow: 0 0 50px rgba(0, 255, 255, 0.6), inset 0 0 50px rgba(0, 255, 255, 0.2);
+                border-color: #ff00ff;
+            }
+        }
+
+        /* Quote marks */
+        .quote-mark {
+            font-family: 'Space Grotesk', sans-serif;
+            opacity: 0;
+            animation: quote-fade 1.2s ease-out 0.5s forwards;
+            color: #ff00ff;
+            text-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
+        }
+
+        @keyframes quote-fade {
+            to {
+                opacity: 0.7;
+            }
+        }
+
+        /* Scroll hint */
+        .scroll-hint {
+            animation: data-bounce 2.5s infinite;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+            letter-spacing: 1px;
+        }
+
+        @keyframes data-bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-12px);
+            }
+
+            60% {
+                transform: translateY(-6px);
+            }
+        }
+
+        /* Corner brackets */
+        .bracket {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border: 2px solid #00ffff;
+            opacity: 0.4;
+        }
+
+        .bracket-tl {
+            top: 5%;
+            left: 3%;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .bracket-tr {
+            top: 5%;
+            right: 3%;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .bracket-bl {
+            bottom: 5%;
+            left: 3%;
+            border-right: none;
+            border-top: none;
+        }
+
+        .bracket-br {
+            bottom: 5%;
+            right: 3%;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* Loading bar animation */
+        .loading-bar {
+            position: absolute;
+            bottom: 3%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, transparent);
+            animation: load-progress 4.5s ease-in 4.5s forwards;
+        }
+
+        @keyframes load-progress {
+            to {
+                width: 80px;
+            }
+        }
+    </style>
+    <style>
+        @view-transition {
+            navigation: auto;
+        }
+    </style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+</head>
+
+<body class="h-full">
+    <audio autoplay loop preload="auto" aria-hidden="true">
+        <source src="f3.mp3" type="audio/mpeg">
+    </audio>
+    <div class="poem-bg w-full h-full flex flex-col items-center justify-between py-8 px-6 overflow-auto relative">
+        <!-- Processing core -->
+        <div class="core"></div><!-- Neural network particles -->
+        <div class="node-particle"></div>
+        <div class="node-particle"></div>
+        <div class="node-particle"></div>
+        <div class="node-particle"></div>
+        <div class="node-particle"></div>
+        <div class="node-particle"></div>
+        <div class="node-particle"></div>
+        <div class="node-particle"></div><!-- Connection lines -->
+        <div class="connection-line connection-1"></div>
+        <div class="connection-line connection-2"></div>
+        <div class="connection-line connection-3"></div><!-- Scanning beam -->
+        <div class="scan-beam"></div><!-- Corner brackets -->
+        <div class="bracket bracket-tl"></div>
+        <div class="bracket bracket-tr"></div>
+        <div class="bracket bracket-bl"></div>
+        <div class="bracket bracket-br"></div><!-- Main content -->
+        <div class="relative z-10 w-full max-w-sm flex flex-col items-center flex-1 justify-center"><!-- Title -->
+            <h1 id="poem-title" class="poem-title text-3xl mb-5 text-center ">A good friend</h1>
+            <!-- Decorative line -->
+            <div class="deco-line mb-10"></div><!-- Poem container -->
+            <div class="poem-container relative rounded-lg p-10 shadow-2xl"><!-- Opening quote --> <span
+                    class="quote-mark absolute -top-5 -left-3 text-6xl">"</span> <!-- Poem lines -->
+                <div class="space-y-5 text-center">
+                    <p class="poem-line">Life feels a little better when you have a good friend by your side.</p>
+                    <p class="poem-line mt-8">Thank you for being that friend.</p>
+                    <p class="poem-line">I’m really lucky to know you. ❤️</p>
+
+                </div><!-- Closing quote --> <span
+                    class="quote-mark absolute -bottom-5 -right-2 text-6xl rotate-180">"</span>
+            </div>
+        </div><!-- Bottom section with button -->
+        <div class="relative z-10 w-full max-w-sm flex flex-col items-center mt-10"><!-- Scroll hint -->
+            <div class="scroll-hint text-xs mb-5 tracking-wider uppercase">
+                ↓ next ↓
+            </div><!-- Next button --> <button onclick="goToEnglishPage()"
+                class="next-btn bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-16 py-4 rounded-sm text-lg tracking-widest font-bold shadow-lg shadow-cyan-500/60 border-2 border-cyan-400/60 transition-all duration-300 hover:shadow-cyan-500/80 hover:shadow-2xl uppercase">
+                ⚡ NEXT ⚡ </button> <!-- Loading bar -->
+            <div class="loading-bar"></div><!-- Page indicator -->
+            <div class="flex gap-4 mt-8">
+                <div class="w-3 h-3 border-2 border-cyan-500 rounded-full shadow-lg shadow-cyan-500/50"></div>
+                <div class="w-3 h-3 border-2 border-cyan-500 rounded-full shadow-lg shadow-cyan-500/50"></div>
+                <div class="w-3 h-3 border-2 border-cyan-500 rounded-full shadow-lg shadow-cyan-500/50"></div>
+                <div class="w-3 h-3 border-2 border-cyan-500 rounded-full shadow-lg shadow-cyan-500/50"></div>
+                <div class="w-2 h-2 border-1 border-cyan-500/50 rounded-full"></div>
+                <div class="w-2 h-2 border-1 border-cyan-500/30 rounded-full"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const defaultConfig = {
+            poem_title: "A good friend"
+        };
+
+        async function onConfigChange(config) {
+            const titleEl = document.getElementById('poem-title');
+
+            if (titleEl) {
+                titleEl.textContent = config.poem_title || defaultConfig.poem_title;
+            }
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["poem_title", config.poem_title || defaultConfig.poem_title]
+            ]);
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        }
+    </script>
+
+    <script>
+        function goToEnglishPage() {
+            window.location.href = 'bengali.html';
+        }
+    </script>
+
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9c9bbf0202bf4f8f',t:'MTc3MDM5MjQyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>
